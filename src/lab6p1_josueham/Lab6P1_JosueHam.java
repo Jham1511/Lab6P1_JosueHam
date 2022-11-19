@@ -184,6 +184,9 @@ public class Lab6P1_JosueHam {
         for (int i = 0; i < mayores.length; i++) {
             StrNumMayores += mayores[i];
         }
+        if (StrNumMayores.length() < 4) {
+            StrNumMayores += "0";
+        }
         int numMayores = Integer.parseInt(StrNumMayores);
         return numMayores;
     }//Fin metodo de pasar los arrays a numero entero
@@ -218,10 +221,9 @@ public class Lab6P1_JosueHam {
         arrayDeNumEntero(num);
         int[] arreglo = arrayDeNumEntero(num);
         int[] arreglo1 = arrayDeNumEntero(num);
-        //System.out.println("Arreglo organizado de menor a mayor: ");
+        
         organizarMenores(arreglo1);
         System.out.println();
-        //System.out.println("Arreglo organizado de mayor a menor: ");
         organizarMayores(arreglo);
         int mayores = PasarEnterosMayores(arreglo);
         int menores = PasarEnterosMenores(arreglo1);
