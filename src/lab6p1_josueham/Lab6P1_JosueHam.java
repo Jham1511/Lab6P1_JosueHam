@@ -46,15 +46,23 @@ public class Lab6P1_JosueHam {
                     int num = leer.nextInt();
 
                     String digitos = Integer.toString(num);
-                    if (digitos.length() == 4) {
-                        imprimir (arrayDeNumEntero(num));
-                        int[] arreglo = arrayDeNumEntero(num); 
-                        System.out.println();
-                        System.out.println("Arreglo organizado: ");
-                        imprimir (organizarMenores (arreglo));
+                    int[] validacion = arrayDeNumEntero(num);
+
+                    if (digitos.length() == 4 && Validacion4Digitos(validacion)) {
+                        int resultado = Kaprekar(num);
+                        System.out.println(resultado);
+                        for (int i = 0; i < 8; i++) {
+                            
+                            if (resultado == 6174) {
+                                break;
+                            }
+                            resultado = Kaprekar(resultado);
+                            System.out.println(resultado);
+                        }//Fin for i
                     }//Fin if
                     else {
                         System.out.println("El numero ingresado tiene que ser de 4 digitos");
+                        System.out.println("Los 4 digitos del numero no pueden ser iguales");
                     }//Fin else validacion 4 digitos 
 
                 }//Fin case 2
@@ -89,52 +97,138 @@ public class Lab6P1_JosueHam {
         String res = "";
 
         for (int i = 0; i < cadena.length(); i++) {
-            if (cadena.charAt(i) == 'R') {
-                pos++;
-            }//Fin if
-            else if (cadena.charAt(i) == 'L') {
-                pos--;
-            }//Fin else if
-            else if (cadena.charAt(i) == 'X') {
-                res += arregloRandom[pos];
-            }//Fin else
+            switch (cadena.charAt(i)) {
+                //Fin if
+                case 'R':
+                    pos++;
+                    break;
+                //Fin else if
+                case 'L':
+                    pos--;
+                    break;
+                //Fin else
+                case 'X':
+                    res += arregloRandom[pos];
+                    break;
+                default:
+                    break;
+            }//Fin switch            
         }//Fin del for i
         return res;
     }//Fin del metodo cadenaInstrucciones
 
-   public static int[] arrayDeNumEntero (int num){
-       String digitos = Integer.toString(num);
-       int[] arrayEnteros = new int [digitos.length()];
-       for (int i = 0; i < arrayEnteros.length; i++) {
-           arrayEnteros[i] = digitos.charAt(i)- 48;
-       }
-       
-       return arrayEnteros;
-   }//Fin metodo organizar menores
-   
-   public static int [] organizarMenores (int [] arrayEnteros){
-       
-       int[] menores = new int [arrayEnteros.length];
-       
-       
-       for (int i = 1; i < menores.length; i++) {
-           for (int j = 0; j < menores.length - 1; j++) {
-               if (arrayEnteros[j] > arrayEnteros [j+1]) {
-                   int posGuardada = arrayEnteros [j];
-                   arrayEnteros[j] = arrayEnteros[j +1];
-                   arrayEnteros[j + 1] = posGuardada;
-               }//Fin if
-           }//Fin for j
-       }//Fin for i
-       menores = arrayEnteros;
-       return menores;
-   }//Fin del metodo organizar menores
-
-    public static int [] organizarMayores (int [] organizarMenores){
-        for (int i = 0; i < 10; i++) {
-            
+    public static int[] arrayDeNumEntero(int num) {
+        String digitos = Integer.toString(num);
+        int[] arrayEnteros = new int[digitos.length()];
+        for (int i = 0; i < arrayEnteros.length; i++) {
+            arrayEnteros[i] = digitos.charAt(i) - 48;
         }
-        
-        return null;
+
+        return arrayEnteros;
+    }//Fin metodo pasar un num entero a array
+
+    public static int[] organizarMenores(int[] arrayEnteros) { //Llamo como parametro mi arreglo de enteros para usarlo adentro del metodo
+        int[] temp = arrayEnteros;//Le asigno a un arreglo nuevo mi arreglo de numeros enteros
+        int[] menores = new int[arrayEnteros.length]; // Este sera el nuevo arreglo ordenado
+        int pos = 0; //Inicializo mi contador en 0 que me servira como posicion inicial 
+
+        while (pos < arrayEnteros.length) {
+            int menor = arrayEnteros[pos];
+            for (int i = pos; i < temp.length; i++) {
+                if (temp[i] < menor) {
+                    menor = temp[i]; // Encontrar el menor del arreglo temporal desde pos hasta length
+                }
+            }
+            for (int i = pos; i < temp.length; i++) {
+                if (temp[i] == menor) {
+                    int aux = temp[pos];//Guarda el elemento del arreglo para no perder el valor al hacer el intercambio
+                    temp[pos] = menor; //Hace el intercambio 
+                    temp[i] = aux; //Hace el intercambio 
+                }
+            }
+            menores[pos] = menor;//Se agrega el menor al arreglo final ordenado
+            pos++; // Se incrementa pos para poder evaluar el resto de los numeros, descartando los anteriores a pos  
+        }
+        return menores;
+    }
+
+    public static int[] organizarMayores(int[] arrayEnteros) {
+
+        int[] temp = arrayEnteros;
+        int[] mayores = new int[arrayEnteros.length];
+        int pos = 0;
+
+        while (pos < arrayEnteros.length) {
+            int mayor = arrayEnteros[pos];
+            for (int i = pos; i < temp.length; i++) {
+                if (temp[i] > mayor) {
+                    mayor = temp[i];
+                }
+            }
+            for (int i = pos; i < temp.length; i++) {
+                if (temp[i] == mayor) {
+                    int aux = temp[pos];
+                    temp[pos] = mayor;
+                    temp[i] = aux;
+                }
+            }
+            mayores[pos] = mayor;
+            pos++;
+        }
+
+        return mayores;
     }//Fin del metodo organizar mayores
+
+    public static int PasarEnterosMayores(int[] mayores) {
+        String StrNumMayores = "";
+        for (int i = 0; i < mayores.length; i++) {
+            StrNumMayores += mayores[i];
+        }
+        int numMayores = Integer.parseInt(StrNumMayores);
+        return numMayores;
+    }//Fin metodo de pasar los arrays a numero entero
+
+    public static int PasarEnterosMenores(int[] menores) {
+        String StrNumMenores = "";
+        for (int i = 0; i < menores.length; i++) {
+            StrNumMenores += menores[i];
+        }
+        int numMenores = Integer.parseInt(StrNumMenores);
+        return numMenores;
+    }//Fin metodo de pasar los arrays a numero entero
+
+    public static boolean Validacion4Digitos(int[] arrayEnteros) {
+
+        boolean valido = true;
+        int cont = 0;
+
+        for (int i = 0; i < arrayEnteros.length - 1; i++) {
+            if (arrayEnteros[i] == arrayEnteros[i + 1]) {
+                cont++;
+            }
+        }
+        if (cont == 3) {
+            valido = false;
+        }
+        return valido;
+    }//Fin del metodo para validar si los 4 digitos son iguales
+
+    public static int Kaprekar(int num) {
+        int resta = 0;
+        arrayDeNumEntero(num);
+        int[] arreglo = arrayDeNumEntero(num);
+        int[] arreglo1 = arrayDeNumEntero(num);
+        //System.out.println("Arreglo organizado de menor a mayor: ");
+        organizarMenores(arreglo1);
+        System.out.println();
+        //System.out.println("Arreglo organizado de mayor a menor: ");
+        organizarMayores(arreglo);
+        int mayores = PasarEnterosMayores(arreglo);
+        int menores = PasarEnterosMenores(arreglo1);
+        
+
+        resta = mayores - menores;
+        System.out.println(mayores + " - " + menores + " = " + resta);
+        return resta;
+    }//Fin metodo Kaprekar
 }//Fin de la clase
